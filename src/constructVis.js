@@ -14,6 +14,8 @@ const constructVis = (domNode, commitData) => {
   nodes = [];
   links = [];
 
+  d3.select(domNode).select('svg').remove();
+
   const svg = d3.select(domNode).append("svg")
   .attr("width", width)
   .attr("height", height);
@@ -109,11 +111,8 @@ function start(time) {
 function startVis(commitsData) {
   const shas = Object.keys(commitsData).reverse();
   const commits = shas.map(sha => commitsData[sha]);
-
-  let i = 0;
   const nodesMap = {};
   const linksMap = {};
-  const linksUnique = new Set();
   const firstTime = new Date(commits[0].committer.date);
   const lastTime = new Date(commits[commits.length - 1].committer.date);
   const animationDuration = 20000;
@@ -121,7 +120,10 @@ function startVis(commitsData) {
   const timeSpace = animationDuration / (lastTime - firstTime);
   const showTimeInterval = (lastTime - firstTime) / tickFreq;
 
+  const toTwoDigit = (n) => n < 10 ? `0${n}` : `${n}`;
+
   for (let i = 0; i <= tickFreq; i++) {
+    // eslint-disable-next-line
     setTimeout(() => {
       const time = new Date(showTimeInterval * i + (+firstTime))
 
@@ -131,8 +133,6 @@ function startVis(commitsData) {
       // const hour = time.getHours();
       // const minute = time.getMinutes();
 
-      const toTwoDigit = (n) => n < 10 ? `0${n}` : `${n}`;
-
       datetime.text(`${toTwoDigit(year)}-${toTwoDigit(month)}-${toTwoDigit(day)}`);
     
     }, animationDuration / tickFreq * i);
@@ -141,10 +141,11 @@ function startVis(commitsData) {
   for (let i = 0; i < shas.length; i++) {
     const sha = shas[i];
 
-    const { committer, stats, files } = commitsData[sha];
+    const { committer, files } = commitsData[sha]; // stat
 
     const time = new Date(committer.date);
 
+    // eslint-disable-next-line
     setTimeout(() => {
       files.forEach(file => {
 

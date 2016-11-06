@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-
 import constructVis from './constructVis';
+import d3 from 'd3';
 
 class Vis extends Component {
   constructor(props) {
@@ -16,8 +16,14 @@ class Vis extends Component {
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isLoading) {
+      d3.select(ReactDOM.findDOMNode(this)).select('svg').remove();
+    }
+  }
+
   render() {
-    if (this.props.commitData !== undefined) {
+    if (this.props.commitData !== undefined && this.props.commitData !== '') {
       constructVis(this.state.domNode, this.props.commitData)
     }
 

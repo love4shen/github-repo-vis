@@ -6,6 +6,14 @@ import MessageBar from './MessageBar';
 import URLForm from './URLForm';
 import Vis from './Vis';
 
+const styles = {
+  container: {
+    width: '80%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+}
+
 class App extends Component {
   constructor() {
     super();
@@ -37,18 +45,13 @@ class App extends Component {
           processData={this.processData}
         />
         <MessageBar isLoading={this.state.isLoading} />
-        <Vis commitData={this.state.data}/>
+        <Vis
+          isLoading={this.state.isLoading}
+          commitData={this.state.data}
+        />
       </div>
     );
   }
-}
-
-const styles = {
-  container: {
-    width: '80%',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-  },
 }
 
 export default App;

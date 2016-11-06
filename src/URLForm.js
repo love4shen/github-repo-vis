@@ -37,14 +37,13 @@ class URLForm extends Component {
     if (this.state.githubUrl.includes('github.com')) {
       this.props.updateState(Object.assign({}, this.state, {
         isLoading: true,
+        data: '',
       }));
 
       handleVisRequest(this.state, this.props.updateState, this.props.processData);
     } else {
       alert('Bad Github URL');
     }
-
-    
   }
 
   render() {
@@ -136,22 +135,29 @@ function getCommitsWrapper(initConfig) {
     const allCommits = [];
 
     function getCommitsHelper(res) {
-      const [link] = res.headers.get('link').split(',');
-      const [original, nextUrl, rel] = link.match(/\<(.*)\>\;\ rel\=\"([a-z]+)\"/);
-
       return res.json()
         .then(data => {
           const shas = data.map(e => e.sha);
 
           allCommits.push(...shas.map(sha => fetch(`${response.url}/${sha}`, initConfig)));
 
-          if (rel === 'next') {
-            return fetch(nextUrl, initConfig).then(getCommitsHelper).catch(err => console.log(err))
-          } else {
-            return new Promise((resolve, reject) => {
-              resolve(allCommits);
-            });
+          const originLink = res.headers.get('link');
+
+          if (originLink !== null && originLink !== undefined) {
+            const [link] = originLink.split(',');
+            const {
+              1: nextUrl,
+              2: rel
+            } = link.match(/<(.*)>; rel="([a-z]+)"/);
+
+            if (rel === 'next') {
+              return fetch(nextUrl, initConfig).then(getCommitsHelper).catch(err => console.log(err));
+            }
           }
+
+          return new Promise((resolve, reject) => {
+            resolve(allCommits);
+          });
 
         })
         .catch(err => console.log(err));

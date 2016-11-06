@@ -1,10 +1,4 @@
-import React, { Component } from 'react';
-
-const Header = () => (
-  <header style={styles.header}>
-    <h1>GitHub Project Evolution Vis</h1>
-  </header>
-);
+import React from 'react';
 
 const styles = {
   header: {
@@ -13,5 +7,11 @@ const styles = {
     alignItems: 'center',
   }
 }
+
+const Header = () => (
+  <header style={styles.header}>
+    <h1>GitHub Project Evolution Vis</h1>
+  </header>
+);
 
 export default Header;
