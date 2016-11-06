@@ -13,6 +13,7 @@ class Vis extends Component {
   componentDidMount() {
     this.setState({
       domNode: ReactDOM.findDOMNode(this),
+      width: ReactDOM.findDOMNode(this).clientWidth,
     });
   }
 
@@ -24,7 +25,7 @@ class Vis extends Component {
 
   render() {
     if (this.props.commitData !== undefined && this.props.commitData !== '') {
-      constructVis(this.state.domNode, this.props.commitData)
+      constructVis(this.state.domNode, this.props.commitData, this.state.width)
     }
 
     return <div></div>;

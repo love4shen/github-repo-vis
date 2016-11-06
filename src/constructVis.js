@@ -8,8 +8,8 @@ let datetime;
 let nodes;
 let links;
 
-const constructVis = (domNode, commitData) => {
-  const width = 960;
+const constructVis = (domNode, commitData, width) => {
+  // const width = 960;
   const height = 600;
   nodes = [];
   links = [];
