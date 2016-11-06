@@ -1,8 +1,24 @@
-const width = 960;
-const height = 600;
-let nodes = [];
-let links = [];
-const force = d3.layout.force()
+import d3 from 'd3';
+
+let node;
+let link;
+let label;
+let force;
+let datetime;
+let nodes;
+let links;
+
+const constructVis = (domNode, commitData) => {
+  const width = 960;
+  const height = 600;
+  nodes = [];
+  links = [];
+
+  const svg = d3.select(domNode).append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+  force = d3.layout.force()
   .nodes(nodes)
   .links(links)
   .gravity(0.05)
@@ -11,17 +27,32 @@ const force = d3.layout.force()
   .size([width, height])
   .on("tick", tick);
 
-const svg = d3.select("body").append("svg")
-  .attr("width", width)
-  .attr("height", height);
+  node = svg.selectAll(".node");
+  link = svg.selectAll(".link");
+  label = svg.selectAll('.label')
+  datetime = svg.append('text')
+    .attr('class', 'showTime')
+    .attr('x', 20)
+    .attr('y', 20);
+  
+  startVis(commitData);
+};
 
-let node = svg.selectAll(".node");
-let link = svg.selectAll(".link");
-let label = svg.selectAll('.label')
-const showTime = svg.append('text')
-  .attr('class', 'showTime')
-  .attr('x', 20)
-  .attr('y', 20);
+export default constructVis;
+
+function tick() {
+  link.attr("x1", function (d) { return d.source.x; })
+    .attr("y1", function (d) { return d.source.y; })
+    .attr("x2", function (d) { return d.target.x; })
+    .attr("y2", function (d) { return d.target.y; });
+
+  node.attr("cx", function (d) { return d.x; })
+    .attr("cy", function (d) { return d.y; });
+
+  label.attr('x', (d) => d.x)
+    .attr('y', (d) => d.y);
+}
+
 
 function start(time) {
   link = link.data(force.links(), function (d) { return d.source.id + "->" + d.target.id; });
@@ -75,24 +106,7 @@ function start(time) {
   force.start();
 }
 
-function tick() {
-  link.attr("x1", function (d) { return d.source.x; })
-    .attr("y1", function (d) { return d.source.y; })
-    .attr("x2", function (d) { return d.target.x; })
-    .attr("y2", function (d) { return d.target.y; });
-
-  node.attr("cx", function (d) { return d.x; })
-    .attr("cy", function (d) { return d.y; });
-
-  label.attr('x', (d) => d.x)
-    .attr('y', (d) => d.y);
-}
-
-const colorInterpret = d3.interpolateHsl(d3.hsl(d3.color('#FFCDD2')), d3.hsl(d3.color('#C62828')));;
-
-let i = 0;
-
-module.exports = (commitsData) => {
+function startVis(commitsData) {
   const shas = Object.keys(commitsData).reverse();
   const commits = shas.map(sha => commitsData[sha]);
 
@@ -119,7 +133,7 @@ module.exports = (commitsData) => {
 
       const toTwoDigit = (n) => n < 10 ? `0${n}` : `${n}`;
 
-      showTime.text(`${toTwoDigit(year)}-${toTwoDigit(month)}-${toTwoDigit(day)}`);
+      datetime.text(`${toTwoDigit(year)}-${toTwoDigit(month)}-${toTwoDigit(day)}`);
     
     }, animationDuration / tickFreq * i);
   }
