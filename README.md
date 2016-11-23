@@ -1,4 +1,4 @@
-# GitHub Repo Vis
+# [GitHub Repo Vis](https://love4shen.github.io/github-repo-vis)
 
 Improved Version of [Project Mag Vis](https://github.com/love4shen/project-mag-vis)
 
