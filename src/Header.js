@@ -1,17 +1,20 @@
 import React from 'react';
+import styled from 'styled-components';
+import {
+  PageHeader
+} from 'react-bootstrap';
 
-const styles = {
-  header: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  }
-}
+const Wrapper = styled.h1`
+  width: 80%;
+  margin: 0 auto;
+`;
 
 const Header = () => (
-  <header style={styles.header}>
-    <h1>GitHub Project Evolution Vis</h1>
-  </header>
+  <Wrapper>
+    <PageHeader>
+      <a href="#">GitHub Project Evolution Vis</a>
+    </PageHeader>
+  </Wrapper>
 );
 
 export default Header;

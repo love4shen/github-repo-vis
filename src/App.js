@@ -6,14 +6,6 @@ import MessageBar from './MessageBar';
 import URLForm from './URLForm';
 import Vis from './Vis';
 
-const styles = {
-  container: {
-    width: '80%',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-  },
-}
-
 class App extends Component {
   constructor() {
     super();
@@ -38,7 +30,7 @@ class App extends Component {
 
   render() {
     return (
-      <div style={styles.container}>
+      <div>
         <Header />
         <URLForm
           updateState={this.updateState}

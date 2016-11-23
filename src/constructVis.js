@@ -36,7 +36,7 @@ const constructVis = (domNode, commitData, width) => {
     .attr('class', 'showTime')
     .attr('x', 20)
     .attr('y', 20);
-  
+
   startVis(commitData);
 };
 
@@ -61,7 +61,16 @@ function start(time) {
   link.enter().insert("line", ".node").attr("class", "link");
   link.exit().remove();
 
-  node = node.data(force.nodes(), function (d) { return d.id; }).call(force.drag())
+  node = node.data(force.nodes(), function (d) { return d.id; }).call(force.drag().on("dragstart", dragstart));
+
+  function dragstart(d) {
+    d3.select(this).classed("fixed", d.fixed = true);
+  }
+
+  function dblclick(d) {
+    d3.select(this).classed("fixed", d.fixed = false);
+  }
+
   node.enter()
     .append("circle")
     .attr('data-id', d => d.id)
@@ -85,7 +94,8 @@ function start(time) {
     })
     .on("mouseout", (d) => {
       d3.select(`.label[data-id="${d.id}"]`).style('display', 'none');
-    });
+    })
+    .on("dblclick", dblclick);
   node.exit().remove();
 
   label = label.data(force.nodes(), (d) => d.id)
@@ -134,7 +144,7 @@ function startVis(commitsData) {
       // const minute = time.getMinutes();
 
       datetime.text(`${toTwoDigit(year)}-${toTwoDigit(month)}-${toTwoDigit(day)}`);
-    
+
     }, animationDuration / tickFreq * i);
   }
 

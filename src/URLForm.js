@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
+import {
+  Form,
+  FormGroup,
+  FormControl,
+  ControlLabel,
+  Button,
+} from 'react-bootstrap';
 
-const styles = {
-  form: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-
-  form__label: {
-    flex: '1 1 auto',
-  }
-};
+const Wrapper = styled.div`
+  width: 80%;
+  margin: 0 auto;
+`;
 
 class URLForm extends Component {
   constructor(props) {
@@ -34,52 +36,68 @@ class URLForm extends Component {
   handleSubmit(evt) {
     evt.preventDefault();
 
-    if (this.state.githubUrl.includes('github.com')) {
-      this.props.updateState(Object.assign({}, this.state, {
-        isLoading: true,
-        data: '',
-      }));
+    this.props.updateState(Object.assign({}, this.state, {
+      isLoading: true,
+      data: '',
+    }));
 
-      handleVisRequest(this.state, this.props.updateState, this.props.processData);
-    } else {
-      alert('Bad Github URL');
-    }
+    handleVisRequest(this.state, this.props.updateState, this.props.processData);
+
+    this.setState({
+      githubUrl: '',
+      username: '',
+      password: '',
+    });
   }
 
   render() {
     return (
-      <form style={styles.form}>
-        <label style={styles.form__label}>
-          <span>GitHub Url: </span>
-          <input
-            type="text"
-            name="githubUrl"
-            value={this.state.githubUrl}
-            onChange={this.handleChange}
+      <Wrapper>
+        <Form inline>
+          <FormGroup>
+            <ControlLabel>GitHub URL</ControlLabel>
+            {' '}
+            <FormControl
+              type="text"
+              name="githubUrl"
+              value={this.state.githubUrl}
+              onChange={this.handleChange}
             />
-        </label>
-        <label style={styles.form__label}>
-          <span>Username: </span>
-          <input
-            type="text"
-            name="username"
-            value={this.state.username}
-            onChange={this.handleChange}
+          </FormGroup>
+          {' '}
+          <FormGroup>
+            <ControlLabel>Username</ControlLabel>
+            {' '}
+            <FormControl
+              type="text"
+              name="username"
+              value={this.state.username}
+              onChange={this.handleChange}
             />
-        </label>
-        <label style={styles.form__label}>
-          <span>Password: </span>
-          <input
-            type="password"
-            name="password"
-            value={this.state.password}
-            onChange={this.handleChange}
+          </FormGroup>
+          {' '}
+          <FormGroup>
+            <ControlLabel>Password</ControlLabel>
+            {' '}
+            <FormControl
+              type="password"
+              name="password"
+              value={this.state.password}
+              onChange={this.handleChange}
             />
-        </label>
-        <button
-          onClick={this.handleSubmit}
-          >Visualize!</button>
-      </form>
+          </FormGroup>
+          {' '}
+          <Button
+            style={{
+              float: 'right',
+            }}
+            bsStyle="primary"
+            onClick={this.handleSubmit}
+          >
+            Visualize!
+          </Button>
+        </Form>
+      </Wrapper>
     );
   }
 }
